@@ -260,12 +260,10 @@
     [self resetContentViewScale];
     
     [self.view bringSubviewToFront:self.menuViewContainer];
-    
-    CGFloat width = self.view.bounds.size.width - self.contentViewInPortraitOffsetCenterX;
-    
-    [UIView animateWithDuration:self.animationDuration animations:^{
         
-        self.menuViewContainer.frame = CGRectMake(0, 0, width, CGRectGetHeight(self.view.bounds));
+    [UIView animateWithDuration:self.animationDuration animations:^{
+
+        self.menuViewContainer.frame = CGRectMake(0, 0, self.menuWidth, CGRectGetHeight(self.view.bounds));
         
     } completion:^(BOOL finished) {
         [self addContentViewControllerMotionEffects];
@@ -300,16 +298,14 @@
     self.rightMenuVisible = NO;
     [self.contentButton removeFromSuperview];
     
-    CGFloat width = self.view.bounds.size.width - self.contentViewInPortraitOffsetCenterX;
-    
     __typeof (self) __weak weakSelf = self;
     void (^animationBlock)(void) = ^{
         __typeof (weakSelf) __strong strongSelf = weakSelf;
         if (!strongSelf) {
             return;
         }
-        
-        self.menuViewContainer.frame = CGRectMake(-width, 0, width, CGRectGetHeight(self.view.bounds));
+
+        self.menuViewContainer.frame = CGRectMake(-self.menuWidth, 0, self.menuWidth, CGRectGetHeight(self.view.bounds));
     };
     void (^completionBlock)(void) = ^{
         __typeof (weakSelf) __strong strongSelf = weakSelf;
@@ -465,16 +461,15 @@
     }
     
     CGPoint point = [recognizer translationInView:self.view];
-    CGFloat width = self.view.bounds.size.width - self.contentViewInPortraitOffsetCenterX;
     static CGFloat originX;
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         [self updateContentViewShadow];
         
-        self.menuViewContainer.frame = CGRectMake(self.leftMenuVisible ? 0 : -width, 0, width, CGRectGetHeight(self.view.bounds));
+        self.menuViewContainer.frame = CGRectMake(self.leftMenuVisible ? 0 : -self.menuWidth, 0, self.menuWidth, CGRectGetHeight(self.view.bounds));
         [self.view bringSubviewToFront:self.menuViewContainer];
         originX = CGRectGetMinX(self.menuViewContainer.frame);
-        
+
         [self addContentButton];
         [self.view.window endEditing:YES];
         self.didNotifyDelegate = NO;
@@ -485,9 +480,9 @@
         // Limit size
         //
         if (point.x < 0) {
-            point.x = MAX(point.x, -width);
+            point.x = MAX(point.x, -self.menuWidth);
         } else {
-            point.x = MIN(point.x, width);
+            point.x = MIN(point.x, self.menuWidth);
         }
         [recognizer setTranslation:point inView:self.view];
         
