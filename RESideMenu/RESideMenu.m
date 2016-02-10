@@ -259,6 +259,8 @@
     [self addContentButton];
     [self resetContentViewScale];
     
+    self.menuViewContainer.hidden = NO;
+    
     [self.view bringSubviewToFront:self.menuViewContainer];
         
     [UIView animateWithDuration:self.animationDuration animations:^{
@@ -315,6 +317,7 @@
         if (!strongSelf.visible && [strongSelf.delegate conformsToProtocol:@protocol(RESideMenuDelegate)] && [strongSelf.delegate respondsToSelector:@selector(sideMenu:didHideMenuViewController:)]) {
             [strongSelf.delegate sideMenu:strongSelf didHideMenuViewController:rightMenuVisible ? strongSelf.rightMenuViewController : strongSelf.leftMenuViewController];
         }
+        self.menuViewContainer.hidden = YES;
     };
     
     if (animated) {
@@ -469,7 +472,8 @@
         self.menuViewContainer.frame = CGRectMake(self.leftMenuVisible ? 0 : -self.menuWidth, 0, self.menuWidth, CGRectGetHeight(self.view.bounds));
         [self.view bringSubviewToFront:self.menuViewContainer];
         originX = CGRectGetMinX(self.menuViewContainer.frame);
-
+        self.menuViewContainer.hidden = NO;
+        
         [self addContentButton];
         [self.view.window endEditing:YES];
         self.didNotifyDelegate = NO;
